@@ -1,96 +1,105 @@
 # dsh-local-voice
 
-**Saisie vocale locale multi-modèles pour [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness)** : Whisper, Parakeet v3 et Moonshine, 100 % hors ligne, en français et dans 99 autres langues.
+**Local multi-model voice input for [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness).** It runs Whisper, Parakeet v3 and Moonshine fully offline, covering French and 99 other languages.
 
-*English below.*
+> [!IMPORTANT]
+> **This is an add-on to DeepSeek Harness's built-in voice input. It does not work on its own.**
+> First enable the official **Voice input** bundle (`@deepseek-ai/dsh-experimental-voice-input-bundle`) on the **Plugins** page.
+> That bundle provides the microphone button, the model picker and the speech-to-text service. This plugin only adds more models to it.
+> If the official bundle is off, this plugin stays in the **"Waiting for dependencies"** state.
 
-La saisie vocale officielle de DeepSeek Harness n'utilise que SenseVoice (chinois, anglais, japonais, coréen, cantonais). Ce plug-in ajoute d'autres modèles au **même sélecteur de modèle** et au **même bouton micro**. Rien n'est envoyé dans le cloud.
+## Why
 
-## Modèles
+The built-in voice input only ships SenseVoice, which covers Chinese, English, Japanese, Korean and Cantonese. This plugin adds well-known open models to the **same model picker** and the **same microphone button**. Audio never leaves your machine.
 
-| Modèle | Langues | Téléchargement | Pour qui |
+## Models
+
+| Model | Languages | Download | Best for |
 |---|---|---|---|
-| **Parakeet TDT 0.6B v3** *(recommandé)* | 25 langues européennes, détection auto | ~670 Mo | Français et anglais rapides et précis sur CPU |
-| Whisper Tiny | 99 | ~105 Mo | Petites machines |
-| Whisper Base | 99 | ~160 Mo | Petites machines |
-| Whisper Small | 99 | ~375 Mo | Bon compromis |
-| Whisper Medium | 99 | ~945 Mo | Précision |
-| Whisper Large v3 Turbo | 99 | ~1,0 Go | Précis et plus rapide que Large |
-| Whisper Large v3 | 99 | ~1,8 Go | Précision maximale, lent |
-| Moonshine Base | anglais | ~290 Mo | Anglais ultra rapide |
+| **Parakeet TDT 0.6B v3** *(recommended)* | 25 European languages, auto-detected | ~670 MB | Fast, accurate French/English/German/Spanish… on CPU |
+| Whisper Tiny | 99 | ~105 MB | Low-end machines |
+| Whisper Base | 99 | ~160 MB | Low-end machines |
+| Whisper Small | 99 | ~375 MB | Good balance |
+| Whisper Medium | 99 | ~945 MB | Accuracy |
+| Whisper Large v3 Turbo | 99 | ~1.0 GB | Accurate and faster than Large |
+| Whisper Large v3 | 99 | ~1.8 GB | Maximum accuracy, slow |
+| Moonshine Base | English | ~290 MB | Very fast English |
 
-Les modèles proviennent de [sherpa-onnx](https://github.com/k2-fsa/sherpa-onnx) (versions ONNX int8). Chaque fichier est figé sur un commit Hugging Face et vérifié (taille + SHA-256) avant utilisation. Un miroir (`hf-mirror.com`) sert de solution de repli.
+The models are the int8 ONNX exports published by [sherpa-onnx](https://github.com/k2-fsa/sherpa-onnx). Every file is pinned to a Hugging Face commit and checked for exact size and SHA-256 before use. [HF-Mirror](https://hf-mirror.com) is used as a fallback source.
 
-## Fonctionnalités
+## Features
 
-- **Choix du modèle** dans le sélecteur de la saisie vocale, avec progression du téléchargement.
-- **Modèles personnalisés** : n'importe quel modèle sherpa-onnx (Whisper, NeMo transducer, Moonshine) déjà présent sur le disque.
-- **Mots personnalisés** : les noms propres et le jargon (« DeepSeek », « Kubernetes ») sont corrigés par correspondance approximative.
-- **Remplacements** : par exemple « point à la ligne » devient un saut de ligne.
-- **Suppression des hésitations** (« euh », « hum », « um », « uh »…).
-- **Traduction vers l'anglais** (Whisper, sauf Turbo).
-- **Déchargement automatique** du modèle après 5 minutes d'inactivité (réglable).
+- **Model choice**: models appear in the voice-input model picker, with download progress.
+- **Custom models**: use any sherpa-onnx Whisper, NeMo transducer or Moonshine model you already have on disk.
+- **Custom words**: names and jargon such as "DeepSeek" or "Kubernetes" are fixed by fuzzy matching (for example, "deep seek" becomes "DeepSeek").
+- **Replacements**: exact whole-word substitutions, for example "new line" becomes a line break.
+- **Filler-word removal**: removes "um", "uh", "euh", "hum" and similar.
+- **Translate to English**: available with Whisper, except Turbo.
+- **Auto-unload**: the model is released after 5 minutes of inactivity (configurable).
 
 ## Installation
 
-1. Dans DeepSeek Harness, ouvrez **Plugins** et activez le bundle officiel **Saisie vocale** (il fournit le bouton micro).
-2. Toujours dans **Plugins**, installez ce bundle depuis GitHub :
+1. **Prerequisite:** in DeepSeek Harness, open **Plugins** and enable the official **Voice input** bundle.
+2. On the same page, install this bundle from GitHub:
    ```
    github:valthvn/dsh-local-voice
    ```
-   ou en ligne de commande : `dsh plugin --profile desktop install github:valthvn/dsh-local-voice`
-3. Cliquez sur le micro, choisissez par exemple **Parakeet TDT 0.6B v3** et la langue **Français**, puis lancez la préparation (téléchargement unique).
+   You can also use the CLI: `dsh plugin --profile desktop install github:valthvn/dsh-local-voice`
+3. In a session, click the microphone and open the model picker. Choose a model (for example **Parakeet TDT 0.6B v3**) and a language, then start the preparation. The model is downloaded once.
 
 ## Configuration
 
-Dans le fichier `cordis.patch.yml` de votre profil (`~/.dsh/profiles/<profil>/`) :
+Add overrides to your profile's `cordis.patch.yml` (`~/.dsh/profiles/<profile>/`):
 
 ```yaml
 - id: speech-to-text-local-voice
   config:
-    models: [parakeet-v3, whisper-small, whisper-turbo]   # modèles proposés
+    models: [parakeet-v3, whisper-small, whisper-turbo]   # catalog models offered in the picker
     removeFillerWords: true
-    customWords: [DeepSeek, Kubernetes, Valentin]
+    customWords: [DeepSeek, Kubernetes]
     replacements:
-      "point à la ligne": "\n"
-      "nouveau paragraphe": "\n\n"
+      "new line": "\n"
+      "new paragraph": "\n\n"
     translateToEnglish: false
     threads: 4
     idleTimeoutMs: 300000
     customModels:
       - id: my-whisper
-        name: Mon Whisper fine-tuné
+        name: My fine-tuned Whisper
         family: whisper
         directory: C:/models/my-whisper
         files: { encoder: encoder.int8.onnx, decoder: decoder.int8.onnx, tokens: tokens.txt }
         languages: [auto, fr, en]
         translate: true
 
-# Modèle et langue par défaut du bouton micro :
+# Default model and language of the microphone button (official speech-to-text service):
 - id: speech-to-text
   config:
     defaultProvider: local-parakeet-v3
-    language: fr
+    language: auto
 ```
 
-Les identifiants de provider sont `local-<modèle>` : `local-parakeet-v3`, `local-whisper-small`, etc.
+Catalog ids are `parakeet-v3`, `whisper-tiny`, `whisper-base`, `whisper-small`, `whisper-medium`, `whisper-turbo`, `whisper-large-v3` and `moonshine-base-en`. Each one is registered as provider `local-<id>`, for example `local-parakeet-v3`.
 
-Les modèles sont stockés dans `~/.dsh/speech-to-text/local-voice/models/`.
+Models are stored in `~/.dsh/speech-to-text/local-voice/models/`.
 
-## Limites
+## Testing outside DeepSeek Harness
 
-- Fonctionne sur CPU uniquement (comme le plug-in officiel). Plateformes : Windows x64, macOS, Linux glibc.
-- La transcription démarre à la fin de l'enregistrement (pas de streaming).
-- Parakeet v3 détecte la langue tout seul : l'indice de langue est ignoré.
+```
+npm install
+node test/e2e.mjs whisper-tiny path/to/recording.wav fr /absolute/data/dir
+```
 
----
+The script downloads and verifies the model, then prints the transcript. It expects a 16 kHz mono PCM16 WAV file.
 
-## English
+## Limitations
 
-Local multi-model voice input for DeepSeek Harness. It adds Whisper (tiny → large-v3), NVIDIA Parakeet TDT 0.6B v3 (25 European languages) and Moonshine (English) to the official voice-input model picker. It also offers custom words (fuzzy correction), exact replacements, filler-word removal, Whisper translation to English, and custom sherpa-onnx models. Everything runs offline on CPU through sherpa-onnx.
+- CPU only, like the built-in provider. Supported platforms are Windows x64, macOS (arm64/x64) and Linux glibc (arm64/x64).
+- Transcription starts when recording stops. There is no streaming.
+- Parakeet v3 detects the language by itself and ignores the language hint.
 
-To install it, enable the official **Voice input** bundle, then install `github:valthvn/dsh-local-voice` from the **Plugins** page. Pick a model in the microphone menu and prepare it.
+## License
 
-## Licence
+MIT. Parts of the host and worker code are derived from `@deepseek-ai/dsh-experimental-speech-to-text-sensevoice` (MIT, © 2026 DeepSeek). The models keep their own licenses: Whisper is MIT, Parakeet is CC-BY-4.0 and Moonshine is MIT.
 
-MIT. Parts of the host and worker code come from `@deepseek-ai/dsh-experimental-speech-to-text-sensevoice` (MIT, © 2026 DeepSeek). Each model has its own licence: Whisper is MIT, Parakeet is CC-BY-4.0, Moonshine is MIT.
+This project is not affiliated with DeepSeek.

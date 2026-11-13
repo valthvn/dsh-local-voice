@@ -1,6 +1,6 @@
 {
   "meta": {
     "title": "Local multi-model voice input",
-    "description": "Run Whisper, Parakeet v3 and Moonshine locally: French and 99 languages, custom words, filler-word removal."
+    "description": "Requires the official Voice input bundle. Adds Whisper, Parakeet v3 and Moonshine running locally: 99 languages, custom words, filler-word removal."
   }
 }

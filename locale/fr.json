@@ -1,6 +1,6 @@
 {
   "meta": {
     "title": "Saisie vocale locale multi-modèles",
-    "description": "Whisper, Parakeet v3 et Moonshine en local : français et 99 langues, mots personnalisés, suppression des « euh »."
+    "description": "Nécessite le bundle officiel Saisie vocale. Ajoute Whisper, Parakeet v3 et Moonshine en local : 99 langues, mots personnalisés, suppression des hésitations."
   }
 }

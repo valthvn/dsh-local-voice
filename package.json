@@ -1,7 +1,7 @@
 {
   "name": "dsh-local-voice",
   "version": "0.1.0",
-  "description": "Local multi-model voice input for DeepSeek Harness: Whisper, Parakeet v3, Moonshine (French and 99 languages)",
+  "description": "Local multi-model voice input for DeepSeek Harness (Whisper, Parakeet v3, Moonshine; 99 languages). Requires the official Voice input bundle.",
   "type": "module",
   "main": "lib/index.js",
   "exports": {
