@@ -1,0 +1,50 @@
+{
+  "name": "dsh-local-voice",
+  "version": "0.1.0",
+  "description": "Local multi-model voice input for DeepSeek Harness: Whisper, Parakeet v3, Moonshine (French and 99 languages)",
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./package.json": "./package.json",
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./locale/*.json": "./locale/*.json"
+  },
+  "files": [
+    "lib/*.js",
+    "locale/*.json",
+    "cordis.patch.yml",
+    "README.md",
+    "LICENSE"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "deepseek-harness",
+    "dsh",
+    "speech-to-text",
+    "whisper",
+    "parakeet",
+    "voice",
+    "sherpa-onnx"
+  ],
+  "dependencies": {
+    "@deepseek-ai/schemastery": "~3.19.0",
+    "sherpa-onnx-node": "1.13.8"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "~4.1.0"
+  },
+  "engines": {
+    "node": ">=24.9.0"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/valthvn/dsh-local-voice.git"
+  },
+  "homepage": "https://github.com/valthvn/dsh-local-voice#readme"
+}

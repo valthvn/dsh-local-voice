@@ -1,0 +1,7 @@
+# Adds local Whisper / Parakeet / Moonshine providers to the voice input registry.
+# Requires the official "Voice input" bundle (speech-to-text service + microphone UI) to be enabled.
+- insert:
+    - id: speech-to-text-local-voice
+      name: 'dsh-local-voice'
+      config:
+        dataRoot: !!js dshHomePath('speech-to-text', 'local-voice')
